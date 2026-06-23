@@ -559,7 +559,7 @@ export function MapView({
     if (!map) return;
     const apply = () => {
       if (!map.getLayer("wimd-selected-outline")) return;
-      const targetFilter = [
+      const targetFilter: any = [
         "==",
         ["get", "LSOA21CD"],
         selectedLSOACode ?? "__none__",
