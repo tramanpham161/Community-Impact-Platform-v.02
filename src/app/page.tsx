@@ -101,20 +101,28 @@ export default function HomePage() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const as = params.get("as");
-    const g = params.get("goal");
-    if (as && VALID_USER_TYPES.includes(as as UserType)) setUserType(as as UserType);
-    if (g && VALID_GOALS.includes(g as UserGoal)) setGoal(g as UserGoal);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const as = params.get("as");
+      const g = params.get("goal");
+      if (as && VALID_USER_TYPES.includes(as as UserType)) setUserType(as as UserType);
+      if (g && VALID_GOALS.includes(g as UserGoal)) setGoal(g as UserGoal);
+    } catch (e) {
+      console.warn("Failed to read search params due to sandbox limitations:", e);
+    }
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    params.set("as", userType);
-    params.set("goal", goal);
-    const url = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, "", url);
+    try {
+      const params = new URLSearchParams(window.location.search);
+      params.set("as", userType);
+      params.set("goal", goal);
+      const url = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState(null, "", url);
+    } catch (e) {
+      console.warn("Failed to update history state due to sandbox limitations:", e);
+    }
   }, [userType, goal]);
 
   const onModeChange = (next: { userType?: UserType; goal?: UserGoal }) => {
