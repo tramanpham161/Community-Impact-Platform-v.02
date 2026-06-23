@@ -1,0 +1,777 @@
+[
+  {
+    "id": "cardiff-council",
+    "name": "Cardiff Council",
+    "type": "Local authority",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "The unitary local authority for Cardiff, responsible for education, social services, housing and economic development across the city.",
+    "geographyServed": "Cardiff (LA-wide)",
+    "location": [
+      -3.166,
+      51.471
+    ],
+    "contact": {
+      "website": "https://www.cardiff.gov.uk"
+    }
+  },
+  {
+    "id": "cardiff-university",
+    "name": "Cardiff University",
+    "type": "College / FE",
+    "sector": "Education",
+    "categoryTags": [
+      "Education"
+    ],
+    "description": "Russell Group university and a major anchor institution for the city's higher education, research and widening-participation activity.",
+    "geographyServed": "Cardiff (Cathays campus)",
+    "location": [
+      -3.179,
+      51.487
+    ],
+    "contact": {
+      "website": "https://www.cardiff.ac.uk"
+    }
+  },
+  {
+    "id": "cardiff-vale-college",
+    "name": "Cardiff and Vale College",
+    "type": "College / FE",
+    "sector": "Education",
+    "categoryTags": [
+      "Education",
+      "Employability"
+    ],
+    "description": "The principal further education college serving Cardiff and the Vale of Glamorgan, with vocational training across construction, health, digital and creative sectors.",
+    "geographyServed": "Cardiff and Vale of Glamorgan",
+    "location": [
+      -3.181,
+      51.473
+    ],
+    "contact": {
+      "website": "https://www.cavc.ac.uk"
+    }
+  },
+  {
+    "id": "cardiff-city-fc-foundation",
+    "name": "Cardiff City FC Foundation",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Employability"
+    ],
+    "description": "Community arm of Cardiff City Football Club, delivering employability, education and inclusion programmes for young people across the city.",
+    "geographyServed": "Cardiff-wide",
+    "location": [
+      -3.203,
+      51.473
+    ],
+    "contact": {
+      "website": "https://foundation.cardiffcityfc.co.uk"
+    }
+  },
+  {
+    "id": "cardiff-capital-region",
+    "name": "Cardiff Capital Region",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "The 10-local-authority Cardiff Capital Region city deal partnership, with a remit for regional skills, transport and economic investment across SE Wales.",
+    "geographyServed": "SE Wales (10 local authorities)",
+    "location": [
+      -3.158,
+      51.471
+    ],
+    "contact": {
+      "website": "https://www.cardiffcapitalregion.wales"
+    }
+  },
+  {
+    "id": "3sc",
+    "name": "3SC (Cardiff Third Sector Council)",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Employability",
+      "Youth"
+    ],
+    "description": "Specialist employability subcontractor working with third-sector partners across Wales to deliver inclusion-focused employment support.",
+    "geographyServed": "Wales (Cardiff base)",
+    "location": [
+      -3.169,
+      51.466
+    ],
+    "contact": {
+      "website": "https://3sc.org"
+    }
+  },
+  {
+    "id": "senedd",
+    "name": "Senedd Cymru / Welsh Parliament",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "The democratically elected parliament for Wales, responsible for devolved policy and budget oversight including education, skills and social mobility.",
+    "geographyServed": "Wales",
+    "location": [
+      -3.163,
+      51.464
+    ],
+    "contact": {
+      "website": "https://senedd.wales"
+    }
+  },
+  {
+    "id": "welsh-government",
+    "name": "Welsh Government",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "The devolved government for Wales, with responsibility for the Young Person's Guarantee, the Youth Engagement and Progression Framework and the Socio-economic Duty.",
+    "geographyServed": "Wales",
+    "location": [
+      -3.18,
+      51.485
+    ],
+    "contact": {
+      "website": "https://www.gov.wales"
+    }
+  },
+  {
+    "id": "grange-pavilion",
+    "name": "Grange Pavilion",
+    "type": "Community group",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Education",
+      "Employability"
+    ],
+    "description": "Community-led pavilion in Grangetown providing a job club, skills support, youth activities and a cultural programme rooted in the local neighbourhood.",
+    "geographyServed": "Grangetown / Cardiff south",
+    "location": [
+      -3.183,
+      51.464
+    ],
+    "contact": {
+      "website": "https://grangepavilion.wales"
+    }
+  },
+  {
+    "id": "welsh-refugee-council",
+    "name": "Welsh Refugee Council",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Education",
+      "Housing",
+      "Employability"
+    ],
+    "description": "National charity supporting refugees and asylum seekers in Wales with advice, integration, ESOL, employability and rights-based casework.",
+    "geographyServed": "Wales (Cardiff HQ)",
+    "location": [
+      -3.176,
+      51.477
+    ],
+    "contact": {
+      "website": "https://wrc.wales"
+    }
+  },
+  {
+    "id": "llamau",
+    "name": "Llamau",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Housing",
+      "Youth"
+    ],
+    "description": "Wales' leading homelessness charity for young people and women, providing accommodation, mediation, education and trauma-informed support.",
+    "geographyServed": "Wales (Cardiff HQ)",
+    "location": [
+      -3.193,
+      51.485
+    ],
+    "contact": {
+      "website": "https://www.llamau.org.uk"
+    }
+  },
+  {
+    "id": "the-wallich",
+    "name": "The Wallich",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Housing"
+    ],
+    "description": "Pan-Wales homelessness charity providing rough sleeper support, hostels, supported housing and recovery services with a harm-reduction approach.",
+    "geographyServed": "Wales (Cardiff HQ)",
+    "location": [
+      -3.193,
+      51.483
+    ],
+    "contact": {
+      "website": "https://thewallich.com"
+    }
+  },
+  {
+    "id": "bawso",
+    "name": "Bawso",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Housing",
+      "Health & wellbeing"
+    ],
+    "description": "Specialist provider supporting Black, Asian and minoritised individuals and families affected by domestic abuse, trafficking and FGM across Wales.",
+    "geographyServed": "Wales (Cardiff HQ)",
+    "location": [
+      -3.18,
+      51.479
+    ],
+    "contact": {
+      "website": "https://www.bawso.org.uk"
+    }
+  },
+  {
+    "id": "eyst-wales",
+    "name": "EYST Wales (Ethnic Youth Support Team)",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Education"
+    ],
+    "description": "Welsh charity supporting Black, Asian and minoritised young people and families with mentoring, advocacy, employment and integration work.",
+    "geographyServed": "Wales (Cardiff and Swansea bases)",
+    "location": [
+      -3.171,
+      51.47
+    ],
+    "contact": {
+      "website": "https://eyst.org.uk"
+    }
+  },
+  {
+    "id": "women-connect-first",
+    "name": "Women Connect First",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Employability",
+      "Health & wellbeing"
+    ],
+    "description": "Cardiff-based charity supporting Black, Asian and minoritised women through education, employability training, ESOL and wellbeing support.",
+    "geographyServed": "Cardiff and SE Wales",
+    "location": [
+      -3.178,
+      51.479
+    ],
+    "contact": {
+      "website": "https://www.womenconnectfirst.org.uk"
+    }
+  },
+  {
+    "id": "hijinx-theatre",
+    "name": "Hijinx Theatre",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Disability"
+    ],
+    "description": "Cardiff-based inclusive theatre company creating performance and training opportunities with learning-disabled and autistic actors.",
+    "geographyServed": "Wales (Cardiff Bay HQ)",
+    "location": [
+      -3.165,
+      51.464
+    ],
+    "contact": {
+      "website": "https://www.hijinx.org.uk"
+    }
+  },
+  {
+    "id": "cwmpas",
+    "name": "Cwmpas",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Education",
+      "Digital inclusion",
+      "Employability"
+    ],
+    "description": "Co-operatives and social-enterprise development agency (formerly the Wales Co-op Centre); delivery partner for Digital Communities Wales.",
+    "geographyServed": "Wales (Cardiff and Caerphilly offices)",
+    "location": [
+      -3.175,
+      51.473
+    ],
+    "contact": {
+      "website": "https://cwmpas.coop"
+    }
+  },
+  {
+    "id": "engage-to-change",
+    "name": "Engage to Change",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Disability",
+      "Employability"
+    ],
+    "description": "Cardiff University-led supported-employment programme for young people aged 16-25 with learning disabilities and autism, in partnership with DFN Project SEARCH.",
+    "geographyServed": "Wales (Cardiff University-led)",
+    "location": [
+      -3.179,
+      51.487
+    ],
+    "contact": {
+      "website": "https://www.engagetochange.org.uk"
+    }
+  },
+  {
+    "id": "challenge-wales",
+    "name": "Challenge Wales",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth"
+    ],
+    "description": "Cardiff Bay-based youth development charity using sail-training voyages to build confidence, teamwork and resilience in young people aged 12-25.",
+    "geographyServed": "Wales (Cardiff Bay base)",
+    "location": [
+      -3.164,
+      51.464
+    ],
+    "contact": {
+      "website": "https://www.challengewales.org"
+    }
+  },
+  {
+    "id": "one-million-mentors",
+    "name": "One Million Mentors (Cardiff Capital Region)",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Education"
+    ],
+    "description": "Cardiff Capital Region branch of the One Million Mentors programme, matching young people with trained career mentors.",
+    "geographyServed": "Cardiff Capital Region (10 LAs)",
+    "location": [
+      -3.178,
+      51.479
+    ],
+    "contact": {
+      "website": "https://onemillionmentors.org.uk"
+    }
+  },
+  {
+    "id": "admiral-group",
+    "name": "Admiral Group",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [],
+    "description": "FTSE 100 insurance group headquartered in Cardiff; major local employer with a substantial early-careers and community programme.",
+    "geographyServed": "Cardiff (HQ)",
+    "location": [
+      -3.176,
+      51.479
+    ],
+    "contact": {
+      "website": "https://www.admiralgroup.co.uk"
+    }
+  },
+  {
+    "id": "south-wales-police",
+    "name": "South Wales Police",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "Territorial police force covering Cardiff and the wider South Wales region, with neighbourhood policing and youth diversion teams.",
+    "geographyServed": "South Wales (Cardiff base)",
+    "location": [
+      -3.166,
+      51.464
+    ],
+    "contact": {
+      "website": "https://www.south-wales.police.uk"
+    }
+  },
+  {
+    "id": "tarian-rocu",
+    "name": "Tarian (South Wales Regional Organised Crime Unit)",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [],
+    "description": "Regional organised-crime unit covering Dyfed-Powys, Gwent and South Wales police forces, with prevention work targeting vulnerable young people.",
+    "geographyServed": "South Wales region",
+    "location": [
+      -3.166,
+      51.464
+    ],
+    "contact": {}
+  },
+  {
+    "id": "restart-refugee-integration",
+    "name": "ReStart: Refugee Integration Project",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Housing",
+      "Employability",
+      "Education"
+    ],
+    "description": "Cardiff-based programme supporting newly-recognised refugees through housing, employment, English language and integration casework.",
+    "geographyServed": "Cardiff",
+    "location": [
+      -3.173,
+      51.483
+    ],
+    "contact": {}
+  },
+  {
+    "id": "ymca",
+    "name": "YMCA Cardiff",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Housing"
+    ],
+    "description": "Cardiff branch of the YMCA, delivering youth work, housing for young people and family programmes across the city.",
+    "geographyServed": "Cardiff (national affiliation)",
+    "location": [
+      -3.169,
+      51.486
+    ],
+    "contact": {
+      "website": "https://www.ymcacardiff.wales"
+    }
+  },
+  {
+    "id": "kings-trust",
+    "name": "The King's Trust",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Employability"
+    ],
+    "description": "UK-wide youth charity (formerly The Prince's Trust) supporting young people aged 11-30 into work, training and self-employment. Cardiff regional office.",
+    "geographyServed": "Wales (Cardiff office)",
+    "location": [
+      -3.179,
+      51.48
+    ],
+    "contact": {
+      "website": "https://www.kingstrust.org.uk"
+    }
+  },
+  {
+    "id": "shaw-trust",
+    "name": "Shaw Trust",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Employability",
+      "Disability"
+    ],
+    "description": "UK-wide employability and skills charity delivering Welsh Government contracts including Communities for Work and supported employment. Cardiff regional base.",
+    "geographyServed": "Wales (Cardiff base)",
+    "location": [
+      -3.18,
+      51.477
+    ],
+    "contact": {
+      "website": "https://www.shawtrust.org.uk"
+    }
+  },
+  {
+    "id": "platfform",
+    "name": "Platfform",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Health & wellbeing"
+    ],
+    "description": "Wales' mental-health and social-change charity, working with people facing distress, trauma and inequality across communities and individual support.",
+    "geographyServed": "Wales (Cardiff office)",
+    "location": [
+      -3.18,
+      51.481
+    ],
+    "contact": {
+      "website": "https://platfform.org"
+    }
+  },
+  {
+    "id": "adferiad",
+    "name": "Adferiad",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Health & wellbeing",
+      "Disability"
+    ],
+    "description": "Welsh charity supporting people with co-occurring mental-health and substance-use needs, formed from the merger of CAIS, Hafal and Welsh Council on Alcohol and Other Drugs.",
+    "geographyServed": "Wales (Cardiff office)",
+    "location": [
+      -3.177,
+      51.481
+    ],
+    "contact": {
+      "website": "https://adferiad.org"
+    }
+  },
+  {
+    "id": "windsor-fellowship",
+    "name": "Windsor Fellowship (LP Wales/Cymru)",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Youth",
+      "Education",
+      "Disability"
+    ],
+    "description": "Charity running leadership and personal-development programmes for young people from minoritised and under-represented backgrounds. LP Wales/Cymru is the Welsh delivery arm.",
+    "geographyServed": "Wales (Cardiff delivery)",
+    "location": [
+      -3.181,
+      51.479
+    ],
+    "contact": {
+      "website": "https://www.windsor-fellowship.org"
+    }
+  },
+  {
+    "id": "brilliant-club",
+    "name": "The Brilliant Club (Wales)",
+    "type": "Charity / VCSE",
+    "sector": "VCSE",
+    "categoryTags": [
+      "Education",
+      "Youth"
+    ],
+    "description": "Education charity placing doctoral researchers in schools to support disadvantaged pupils' progression to highly-selective universities. Wales hub.",
+    "geographyServed": "Wales (Cardiff hub)",
+    "location": [
+      -3.179,
+      51.487
+    ],
+    "contact": {
+      "website": "https://thebrilliantclub.org"
+    }
+  },
+  {
+    "id": "nhs-cardiff-vale",
+    "name": "Cardiff and Vale University Health Board",
+    "type": "Public sector",
+    "sector": "Public",
+    "categoryTags": [
+      "Health & wellbeing"
+    ],
+    "description": "The NHS health board serving Cardiff and the Vale of Glamorgan, with public health, mental health and community health responsibilities relevant to social mobility outcomes.",
+    "geographyServed": "Cardiff and Vale of Glamorgan",
+    "location": [
+      -3.193,
+      51.51
+    ],
+    "contact": {
+      "website": "https://cavuhb.nhs.wales"
+    }
+  },
+  {
+    "id": "hodge",
+    "name": "Hodge",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Welsh-headquartered financial services group at One Central Square specialising in commercial lending and later-life lending, with an established Cardiff apprenticeship intake.",
+    "geographyServed": "Cardiff (Central Square HQ)",
+    "location": [
+      -3.179,
+      51.476
+    ],
+    "contact": {
+      "website": "https://www.hodge.co.uk"
+    }
+  },
+  {
+    "id": "principality-bs",
+    "name": "Principality Building Society",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Wales's largest building society, headquartered on Queen Street in Cardiff city centre, with branch and head-office roles and a financial services apprenticeship programme.",
+    "geographyServed": "Cardiff (Queen Street HQ)",
+    "location": [
+      -3.175,
+      51.481
+    ],
+    "contact": {
+      "website": "https://www.principality.co.uk"
+    }
+  },
+  {
+    "id": "legal-and-general",
+    "name": "Legal & General (Cardiff)",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Major financial services employer with a long-established Cardiff operations site at Brunel House, recruiting into customer operations and operations apprenticeships.",
+    "geographyServed": "Cardiff (Brunel House)",
+    "location": [
+      -3.171,
+      51.482
+    ],
+    "contact": {
+      "website": "https://www.legalandgeneral.com"
+    }
+  },
+  {
+    "id": "bbc-cymru-wales",
+    "name": "BBC Cymru Wales",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability",
+      "Education"
+    ],
+    "description": "BBC Wales national broadcaster based at Central Square in central Cardiff, with apprenticeship and trainee schemes across production, journalism and broadcast engineering.",
+    "geographyServed": "Cardiff (Central Square)",
+    "location": [
+      -3.179,
+      51.476
+    ],
+    "contact": {
+      "website": "https://www.bbc.co.uk/cymruwales"
+    }
+  },
+  {
+    "id": "hugh-james",
+    "name": "Hugh James",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Cardiff-headquartered law firm with a recognised solicitor apprenticeship pathway alongside conventional trainee routes.",
+    "geographyServed": "Cardiff (Central Square)",
+    "location": [
+      -3.180,
+      51.477
+    ],
+    "contact": {
+      "website": "https://www.hughjames.com"
+    }
+  },
+  {
+    "id": "cardiff-bus",
+    "name": "Cardiff Bus",
+    "type": "Corporate / employer",
+    "sector": "Public",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Council-owned bus operator running most local routes from depots at Sloper Road; a steady employer of bus drivers, engineers and apprentices.",
+    "geographyServed": "Cardiff (Sloper Road / Leckwith)",
+    "location": [
+      -3.196,
+      51.466
+    ],
+    "contact": {
+      "website": "https://www.cardiffbus.com"
+    }
+  },
+  {
+    "id": "confused-rvu",
+    "name": "Confused.com (RVU)",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability",
+      "Digital inclusion"
+    ],
+    "description": "Price-comparison technology company based at The Friary in central Cardiff, with tech-apprentice and graduate engineering pipelines.",
+    "geographyServed": "Cardiff (The Friary)",
+    "location": [
+      -3.180,
+      51.482
+    ],
+    "contact": {
+      "website": "https://www.confused.com"
+    }
+  },
+  {
+    "id": "iqe-plc",
+    "name": "IQE plc",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Cardiff-headquartered semiconductor wafer manufacturer at St Mellons, employing engineering apprentices and technicians in advanced manufacturing.",
+    "geographyServed": "Cardiff (St Mellons)",
+    "location": [
+      -3.110,
+      51.523
+    ],
+    "contact": {
+      "website": "https://www.iqep.com"
+    }
+  },
+  {
+    "id": "dwr-cymru",
+    "name": "Dŵr Cymru Welsh Water",
+    "type": "Corporate / employer",
+    "sector": "Public",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Not-for-profit water and wastewater utility for Wales with a major Cardiff operations base at Linea, Fortran Road, St Mellons; runs apprenticeships across engineering, customer ops and lab science.",
+    "geographyServed": "Cardiff (St Mellons) and Wales",
+    "location": [
+      -3.110,
+      51.519
+    ],
+    "contact": {
+      "website": "https://www.dwrcymru.com"
+    }
+  },
+  {
+    "id": "reach-plc-wales",
+    "name": "Reach plc (Wales Online / WalesLive)",
+    "type": "Corporate / employer",
+    "sector": "Private",
+    "categoryTags": [
+      "Employment",
+      "Employability"
+    ],
+    "description": "Wales newsroom of the UK's largest commercial news publisher, based at Six Park Street in central Cardiff, with journalism trainee schemes.",
+    "geographyServed": "Cardiff (Park Street)",
+    "location": [
+      -3.180,
+      51.479
+    ],
+    "contact": {
+      "website": "https://www.walesonline.co.uk"
+    }
+  }
+]

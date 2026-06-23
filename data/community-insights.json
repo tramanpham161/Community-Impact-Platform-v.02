@@ -1,0 +1,72 @@
+[
+  {
+    "id": "insight-splott-transport",
+    "placeId": "cardiff",
+    "location": [
+      -3.155,
+      51.485
+    ],
+    "theme": "Employment",
+    "populationGroup": "Young people",
+    "text": "Buses out of Splott stop at 18:00 so apprentices doing late shifts cannot get home. Two young people have dropped out of programmes this term because of it.",
+    "source": "Coalition partner, Apr 2026",
+    "visibility": "public",
+    "status": "approved"
+  },
+  {
+    "id": "insight-ely-trust",
+    "placeId": "cardiff",
+    "location": [
+      -3.252,
+      51.484
+    ],
+    "theme": "Health & wellbeing",
+    "populationGroup": "Families",
+    "text": "Families in Ely engage with the community partnership but not statutory services. Trust is the blocker, not awareness. Co-located outreach has worked where conventional referral has not.",
+    "source": "Coalition partner, Mar 2026",
+    "visibility": "public",
+    "status": "approved"
+  },
+  {
+    "id": "insight-progression-six-months",
+    "placeId": "cardiff",
+    "location": [
+      -3.176,
+      51.481
+    ],
+    "theme": "Employability",
+    "populationGroup": "Young people",
+    "text": "Plenty of entry-level employability programmes in the city centre, very few that support the first six months in work. The cliff edge is at week 8, not at the door.",
+    "source": "Coalition partner, Apr 2026",
+    "visibility": "public",
+    "status": "approved"
+  },
+  {
+    "id": "insight-riverside-esol",
+    "placeId": "cardiff",
+    "location": [
+      -3.193,
+      51.481
+    ],
+    "theme": "Education",
+    "populationGroup": "Minoritised communities",
+    "text": "ESOL provision is full; refugees and asylum seekers wait 4+ months for a place. Without language progression, employability and integration support cannot land.",
+    "source": "Coalition partner, May 2026",
+    "visibility": "public",
+    "status": "approved"
+  },
+  {
+    "id": "insight-grangetown-aln",
+    "placeId": "cardiff",
+    "location": [
+      -3.183,
+      51.464
+    ],
+    "theme": "Education",
+    "populationGroup": "Disabled people",
+    "text": "Young people with additional learning needs (ALN) hit the sharpest gap between school and post-16 \u2014 handoffs are slow, support is lost, and parents are left to navigate without a clear route.",
+    "source": "Coalition partner, Apr 2026",
+    "visibility": "public",
+    "status": "approved"
+  }
+]
