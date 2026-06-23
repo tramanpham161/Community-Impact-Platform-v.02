@@ -1,0 +1,6 @@
+{
+  "name": "Community Impact Platform",
+  "description": "An integrated workspace mapping social needs, tracking transformation programmes, and measuring quantified outcomes across targeted Cardiff wards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

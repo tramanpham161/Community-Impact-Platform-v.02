@@ -1,0 +1,61 @@
+[
+  {
+    "id": "wimd-q1-share",
+    "placeId": "cardiff",
+    "name": "LSOAs in Wales' most deprived 20%",
+    "value": 56,
+    "unit": " of 218",
+    "context": "26% of Cardiff LSOAs \u2014 Wales-wide baseline is 20%",
+    "source": "StatsWales WIMD 2025",
+    "asOfDate": "2025-01-01"
+  },
+  {
+    "id": "16-24-unemployment",
+    "placeId": "cardiff",
+    "name": "16\u201324 unemployment rate",
+    "value": 11.4,
+    "unit": "%",
+    "context": "Wales average 9.8% \u2014 illustrative figure pending current ONS extract",
+    "source": "ONS / Annual Population Survey (illustrative)",
+    "asOfDate": "2025-07-01"
+  },
+  {
+    "id": "neet-16-18",
+    "placeId": "cardiff",
+    "name": "NEET 16\u201318",
+    "value": 3.2,
+    "unit": "%",
+    "context": "Wales-wide 16\u201318 NEET 2.9% \u2014 illustrative figure pending Careers Wales destination data",
+    "source": "Careers Wales (illustrative)",
+    "asOfDate": "2025-09-01"
+  },
+  {
+    "id": "level3-age19",
+    "placeId": "cardiff",
+    "name": "Level 3 attainment by age 19",
+    "value": 61.7,
+    "unit": "%",
+    "context": "Wales average 58.4% \u2014 illustrative figure pending Welsh Government education data",
+    "source": "StatsWales (illustrative)",
+    "asOfDate": "2024-08-01"
+  },
+  {
+    "id": "active-orgs",
+    "placeId": "cardiff",
+    "name": "Active organisations on the map",
+    "value": 42,
+    "context": "32 Cardiff-relevant orgs from the Phase 1 stakeholder map plus 10 illustrative opportunity employers added in v0.2",
+    "source": "OAHA Phase 1 Stakeholder Map + v0.2 employer additions",
+    "asOfDate": "2026-05-25"
+  },
+  {
+    "id": "healthy-life-expectancy",
+    "placeId": "cardiff",
+    "name": "Healthy life expectancy at birth (male)",
+    "value": 61.8,
+    "unit": " yrs",
+    "context": "Wales average 61.2 yrs \u2014 illustrative figure pending Public Health Wales current release",
+    "source": "Public Health Wales (illustrative)",
+    "asOfDate": "2024-01-01"
+  }
+]
