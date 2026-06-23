@@ -178,7 +178,17 @@ export function MapView({
       maxZoom: 16,
       attributionControl: { compact: true },
     });
+    map.on("load", () => {
+    console.log("MAP LOADED");
+    });
 
+    map.on("styledata", () => {
+    console.log("STYLE DATA");
+    });
+
+    map.on("error", (e) => {
+    console.error("MAP ERROR", e);
+    });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     // The `load` event requires every source to be fully loaded — under React
