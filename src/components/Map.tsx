@@ -141,36 +141,9 @@ export function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    // Self-contained light raster map style that avoids external styles, fonts, or glyph downloads.
-    const rasterStyle: any = {
-      version: 8,
-      sources: {
-        "carto-raster": {
-          type: "raster",
-          tiles: [
-            "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
-            "https://a.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
-            "https://b.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
-            "https://c.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png"
-          ],
-          tileSize: 256,
-          attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
-        }
-      },
-      layers: [
-        {
-          id: "carto-raster-layer",
-          type: "raster",
-          source: "carto-raster",
-          minzoom: 0,
-          maxzoom: 20
-        }
-      ]
-    };
-
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: rasterStyle,
+      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
       center: CARDIFF_CENTRE,
       zoom: 10.7,
       minZoom: 9.5,
@@ -180,11 +153,6 @@ export function MapView({
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    // The `load` event requires every source to be fully loaded — under React
-    // StrictMode double-mount the basemap tile source can stay "not loaded"
-    // indefinitely, so `load` never fires. `styledata` fires as soon as style
-    // metadata is parsed (which is what addSource/addLayer actually require),
-    // and the source-exists guard makes it safe to run on every styledata tick.
     const addWimdLayers = () => {
       if (!map.getStyle() || map.getSource("cardiff-lsoa")) return;
       map.addSource("cardiff-lsoa", { type: "geojson", data: ENRICHED_LSOA_DATA });
@@ -203,27 +171,21 @@ export function MapView({
         source: "cardiff-lsoa",
         paint: { "line-color": "#ffffff", "line-width": 0.5, "line-opacity": 0.7 },
       });
-      // Highlight for the currently selected LSOA. Filter starts as "match
-      // nothing" — page.tsx flips it via setFilter when selection changes.
       map.addLayer({
         id: "wimd-selected-outline",
         type: "line",
         source: "cardiff-lsoa",
         filter: ["==", ["get", "LSOA21CD"], "__none__"],
         paint: {
-          "line-color": "#0f172a", // slate-900
+          "line-color": "#0f172a",
           "line-width": 2.5,
           "line-opacity": 0.9,
         },
       });
     };
     addWimdLayers();
-    map.on("load", addWimdLayers);
     map.on("styledata", addWimdLayers);
 
-    // ── LSOA interaction ───────────────────────────────────────────────
-    // Click toggles selection. Hover changes the cursor to a pointer so the
-    // affordance is discoverable.
     const onLsoaClick = (e: maplibregl.MapLayerMouseEvent) => {
       const f = e.features?.[0];
       if (!f) return;
@@ -240,16 +202,19 @@ export function MapView({
 
     mapRef.current = map;
 
-    // MapLibre's built-in trackResize only watches window — it misses container
-    // size changes from hydration races (container measures ~0 on mount then
-    // grows) and from layout shifts that don't trigger a window resize.
-    // Diff-check the size so a no-op observation during animation doesn't
-    // trigger a redundant resize() that can cancel in-progress easeTo.
-    let lastW = 0, lastH = 0;
-    const ro = new ResizeObserver((entries) => {
-      const { width, height } = entries[0].contentRect;
-      if (width === lastW && height === lastH) return;
-      lastW = width; lastH = height;
+    // Force an immediate resize so the canvas fills the container correctly.
+    // Without this, MapLibre reads the container dimensions before the browser
+    // has finished layout, resulting in a canvas that is half the expected height.
+    map.resize();
+
+    // Re-resize once the style loads in case the container grew further after
+    // the initial paint (e.g. fonts loading, other layout shifts).
+    map.once("styledata", () => { map.resize(); });
+
+    // ResizeObserver catches any subsequent container size changes.
+    // No diff-check — always call resize() so we never miss the initial
+    // measurement race between MapLibre init and CSS layout settling.
+    const ro = new ResizeObserver(() => {
       map.resize();
     });
     ro.observe(containerRef.current);
@@ -320,8 +285,6 @@ export function MapView({
       .addTo(map);
 
     popup.on("close", () => {
-      // Only null these out if this popup is still the active one — guards
-      // against races where openOrgPopup has just replaced it.
       if (popupRef.current === popup) {
         popupRef.current = null;
         popupTargetRef.current = null;
@@ -386,11 +349,6 @@ export function MapView({
   openOrgPopupRef.current = openOrgPopup;
   openInsightPopupRef.current = openInsightPopup;
 
-  // Pin clustering. At zoom < CLUSTER_THRESHOLD, group org pins by a
-  // CLUSTER_CELL-px grid; cells with ≥ 2 pins collapse into a bubble. The
-  // member pins are hidden via display:none rather than removed, so the
-  // existing marker state (sector colour, selected ring) stays intact for
-  // when we zoom back in.
   const CLUSTER_THRESHOLD = 12;
   const CLUSTER_CELL = 50;
 
@@ -401,14 +359,12 @@ export function MapView({
     const clusterMarkers = clusterMarkersRef.current;
     const zoom = map.getZoom();
 
-    // High zoom: no clustering. Show every individual pin, drop bubbles.
     if (zoom >= CLUSTER_THRESHOLD) {
       for (const m of orgMarkers.values()) m.getElement().style.display = "";
       for (const [id, b] of clusterMarkers) { b.remove(); clusterMarkers.delete(id); }
       return;
     }
 
-    // Low zoom: bucket by screen-space grid.
     const cells = new globalThis.Map<string, { ids: string[]; xs: number[]; ys: number[] }>();
     for (const [id, marker] of orgMarkers) {
       const { lng, lat } = marker.getLngLat();
@@ -421,7 +377,6 @@ export function MapView({
       entry.ys.push(lat);
     }
 
-    // Identify which pins are members of multi-pin clusters.
     const inCluster = new Set<string>();
     type Cluster = { key: string; ids: string[]; centre: [number, number]; count: number };
     const clusters: Cluster[] = [];
@@ -430,18 +385,14 @@ export function MapView({
       for (const id of entry.ids) inCluster.add(id);
       const cLng = entry.xs.reduce((s, v) => s + v, 0) / entry.xs.length;
       const cLat = entry.ys.reduce((s, v) => s + v, 0) / entry.ys.length;
-      // Stable id keyed on sorted membership — same composition keeps the
-      // same bubble element across pans, so we never re-create mid-pan.
       const k = entry.ids.slice().sort().join("|");
       clusters.push({ key: k, ids: entry.ids, centre: [cLng, cLat], count: entry.ids.length });
     }
 
-    // Show or hide individual pins.
     for (const [id, marker] of orgMarkers) {
       marker.getElement().style.display = inCluster.has(id) ? "none" : "";
     }
 
-    // Diff cluster bubbles.
     const wantedKeys = new Set(clusters.map((c) => c.key));
     for (const [key, bubble] of clusterMarkers) {
       if (!wantedKeys.has(key)) { bubble.remove(); clusterMarkers.delete(key); }
@@ -494,10 +445,6 @@ export function MapView({
         continue;
       }
       const el = makeOrgMarker(org, selectedOrgId, popupTargetRef.current);
-      // Stop pointer events from reaching MapLibre. Without this, mousedown
-      // on the marker starts a potential drag-pan (which can leave the
-      // following easeTo with an inconsistent transform), and bubbling click
-      // can also fire the map's background click → clear-selection handler.
       const stopPointer = (ev: Event) => ev.stopPropagation();
       el.addEventListener("mousedown", stopPointer);
       el.addEventListener("touchstart", stopPointer, { passive: true });
@@ -514,8 +461,6 @@ export function MapView({
         .addTo(map);
       current.set(org.id, marker);
     }
-    // Membership of clusters depends on which pins are currently visible —
-    // recluster whenever the visible set changes.
     recluster();
   }, [orgs, selectedOrgId]);
 
@@ -596,31 +541,22 @@ export function MapView({
       map.setFilter("wimd-selected-outline", targetFilter);
     };
     apply();
-    // The layer may not exist on the first effect run (style still loading);
-    // re-apply on styledata until it does. Only triggers setFilter if value actually changed.
     map.on("styledata", apply);
     return () => { map.off("styledata", apply); };
   }, [selectedLSOACode]);
 
-  // ── 5. When the side panel opens (from popup CTA or list), close popup
-  //       and ease to focus the selected feature alongside the panel. ───
+  // ── 5. When the side panel opens, close popup and ease to the feature. ──
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     if (!selectedOrgId && !selectedInsightId) return;
 
-    // Side panel takes over — the popup would now redundantly point at the
-    // same pin, so dismiss it.
     closePopup();
 
     let target: [number, number] | null = null;
     if (selectedOrgId) target = orgsById.get(selectedOrgId)?.location ?? null;
     else if (selectedInsightId) target = insightsById.get(selectedInsightId)?.location ?? null;
     if (target) {
-      // Pad the camera by the panel width so the selected pin stays visible.
-      // On mobile (panel covers the whole map) we omit padding entirely —
-      // MapLibre crashes if `padding` is explicitly `undefined`, so build
-      // the options object conditionally.
       const isMobilePanel = window.matchMedia("(max-width: 640px)").matches;
       const opts: maplibregl.EaseToOptions = {
         center: target,
@@ -652,10 +588,6 @@ function makeOrgMarker(
 ) {
   const el = document.createElement("div");
   el.className = "org-pin";
-  // No `position` here — MapLibre adds `position: absolute` via the
-  // `.maplibregl-marker` class on this element. Setting position:relative
-  // would override that, causing markers to take vertical space in normal
-  // flow and stack down the page (drift grows by ~24px per DOM index).
   el.style.cssText = "width:24px;height:24px;cursor:pointer;";
   el.dataset.orgId = org.id;
   el.title = org.name;
@@ -694,7 +626,6 @@ function makeInsightMarker(
 ) {
   const el = document.createElement("div");
   el.className = "insight-pin";
-  // See note in makeOrgMarker — never override MapLibre's position:absolute.
   el.style.cssText = "width:20px;height:20px;cursor:pointer;";
   el.dataset.insightId = insight.id;
   el.title = `Community insight — ${insight.theme}`;
@@ -708,9 +639,6 @@ function makeInsightMarker(
 function makeClusterElement(count: number) {
   const el = document.createElement("div");
   el.className = "org-cluster";
-  // No `position` — MapLibre's .maplibregl-marker class sets position:absolute.
-  // z-index lifts the bubble over insight diamond markers, which sync into the
-  // DOM after org markers and would otherwise paint on top by default.
   const size = count >= 10 ? 40 : 34;
   el.style.cssText = `width:${size}px;height:${size}px;cursor:pointer;z-index:5;`;
   el.title = `${count} organisations here — click to zoom in`;
@@ -753,7 +681,6 @@ function escapeHtml(s: string) {
 
 function truncate(s: string, max: number) {
   if (s.length <= max) return s;
-  // try to cut on a word boundary
   const slice = s.slice(0, max);
   const cut = slice.lastIndexOf(" ");
   return (cut > max * 0.6 ? slice.slice(0, cut) : slice).trimEnd() + "…";
