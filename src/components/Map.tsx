@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import maplibregl from "maplibre-gl";
-import lsoaGeoJson from "./cardiff-lsoa.json"; 
+// Adjusted map alias path to properly catch Next.js/Vercel standard source routing
+import lsoaGeoJson from "@/data/cardiff-lsoa.json"; 
 import type { CommunityInsight, Organisation, WimdDomain } from "@/lib/types";
 import { SECTOR_COLOURS, WIMD_DOMAIN_LABELS, WIMD_RAMP } from "@/lib/types";
 import { wimdScoresFor } from "@/lib/wimd";
@@ -129,7 +130,6 @@ export function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    // Inject CSS directly to solve the blank-canvas container sizing engine breakdown
     if (!document.getElementById("maplibre-injected-css")) {
       const link = document.createElement("link");
       link.id = "maplibre-injected-css";
@@ -270,7 +270,7 @@ export function MapView({
         <div><span class="font-medium text-slate-700">Framework:</span> ${escapeHtml(stageLine)}</div>
         <div class="mt-0.5"><span class="font-medium text-slate-700">Serves:</span> ${escapeHtml(org.geographyServed)}</div>
       </div>
-      <button data-popup-cta type="button" class="mt-3 inline-flex w-full items-center justify-center rounded-md bg-slate-990 bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-slate-800">
+      <button data-popup-cta type="button" class="mt-3 inline-flex w-full items-center justify-center rounded-md bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-slate-800">
         View full detail →
       </button>
     `;
@@ -477,238 +477,4 @@ export function MapView({
     map.on("moveend", run);
     return () => {
       map.off("zoomend", run);
-      map.off("moveend", run);
-    };
-  }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const current = insightMarkersRef.current;
-    const placed = insights.filter((i) => i.location);
-    const wanted = new Set(placed.map((i) => i.id));
-    for (const [id, marker] of current) {
-      if (!wanted.has(id)) { marker.remove(); current.delete(id); }
-    }
-    for (const insight of placed) {
-      const existing = current.get(insight.id);
-      if (existing) {
-        updateInsightMarker(existing.getElement(), insight, selectedInsightId, popupTargetRef.current);
-        continue;
-      }
-      const el = makeInsightMarker(insight, selectedInsightId, popupTargetRef.current);
-      const stopPointer = (ev: Event) => ev.stopPropagation();
-      el.addEventListener("mousedown", stopPointer);
-      el.addEventListener("touchstart", stopPointer, { passive: true });
-      el.addEventListener("dblclick", stopPointer);
-      el.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        const id = (ev.currentTarget as HTMLElement).dataset.insightId!;
-        const i = insightsByIdRef.current.get(id);
-        if (!i) return;
-        openInsightPopupRef.current(i);
-      });
-      const marker = new maplibregl.Marker({ element: el, anchor: "center" })
-        .setLngLat(insight.location!)
-        .addTo(map);
-      current.set(insight.id, marker);
-    }
-  }, [insights, selectedInsightId]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const onBg = () => {
-      closePopup();
-      onSelectOrgRef.current(null);
-      onSelectInsightRef.current(null);
-    };
-    map.on("click", onBg);
-    return () => { map.off("click", onBg); };
-  }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const apply = () => {
-      if (!map.getLayer("wimd-selected-outline")) return;
-      map.setFilter("wimd-selected-outline", [
-        "==",
-        ["get", "LSOA21CD"],
-        selectedLSOACode ?? "__none__",
-      ]);
-    };
-    apply();
-    map.on("styledata", apply);
-    return () => { map.off("styledata", apply); };
-  }, [selectedLSOACode]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    if (!selectedOrgId && !selectedInsightId) return;
-
-    closePopup();
-
-    let target: [number, number] | null = null;
-    if (selectedOrgId) target = orgsById.get(selectedOrgId)?.location ?? null;
-    else if (selectedInsightId) target = insightsById.get(selectedInsightId)?.location ?? null;
-    if (target) {
-      const isMobilePanel = window.matchMedia("(max-width: 640px)").matches;
-      const opts: maplibregl.EaseToOptions = {
-        center: target,
-        zoom: Math.max(map.getZoom(), 12.5),
-        duration: 600,
-      };
-      if (!isMobilePanel) {
-        opts.padding = { right: detailPanelWidth, top: 0, bottom: 0, left: 0 };
-      }
-      map.easeTo(opts);
-    }
-  }, [selectedOrgId, selectedInsightId, orgsById, insightsById, detailPanelWidth]);
-
-  return (
-    <div className="relative block h-[560px] min-h-[560px] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm bg-slate-100">
-      <div 
-        ref={containerRef} 
-        className="absolute inset-0 block h-full w-full" 
-        style={{ height: "100%", width: "100%" }} 
-      />
-      <MapLegend wimdDomain={wimdDomain} />
-      {children}
-    </div>
-  );
-}
-
-function makeOrgMarker(org: Organisation, selectedOrgId: string | null, popupTarget: PopupTarget) {
-  const el = document.createElement("div");
-  el.className = "org-pin";
-  el.style.cssText = "width:24px;height:24px;cursor:pointer;";
-  el.dataset.orgId = org.id;
-  el.title = org.name;
-  el.innerHTML = `
-    <span class="org-pin-dot" aria-hidden style="position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:9999px;pointer-events:none;box-shadow:0 0 0 2px #ffffff,0 1px 2px rgba(0,0,0,.25);"></span>
-  `;
-  updateOrgMarker(el, org, selectedOrgId, popupTarget);
-  return el;
-}
-
-function updateOrgMarker(el: HTMLElement, org: Organisation, selectedOrgId: string | null, popupTarget: PopupTarget) {
-  const colour = SECTOR_COLOURS[org.sector];
-  const dot = el.querySelector(".org-pin-dot") as HTMLElement | null;
-  const isSelected = selectedOrgId === org.id || (popupTarget?.kind === "org" && popupTarget.id === org.id);
-  if (dot) {
-    dot.style.background = colour;
-    dot.style.boxShadow = isSelected
-      ? `0 0 0 3px #ffffff, 0 0 0 5px ${colour}, 0 2px 6px rgba(0,0,0,.3)`
-      : `0 0 0 2px #ffffff, 0 1px 2px rgba(0,0,0,.25)`;
-    dot.style.transform = isSelected ? "scale(1.25)" : "scale(1)";
-    dot.style.transition = "transform .15s ease, box-shadow .15s ease";
-  }
-}
-
-function makeInsightMarker(insight: CommunityInsight, selectedInsightId: string | null, popupTarget: PopupTarget) {
-  const el = document.createElement("div");
-  el.className = "insight-pin";
-  el.style.cssText = "width:20px;height:20px;cursor:pointer;";
-  el.dataset.insightId = insight.id;
-  el.title = `Community insight — ${insight.theme}`;
-  el.innerHTML = `
-    <span aria-hidden style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:2px;background:#f59e0b;pointer-events:none;box-shadow:0 0 0 2px #ffffff,0 1px 2px rgba(0,0,0,.3);transform:rotate(45deg);"></span>
-  `;
-  updateInsightMarker(el, insight, selectedInsightId, popupTarget);
-  return el;
-}
-
-function makeClusterElement(count: number) {
-  const el = document.createElement("div");
-  el.className = "org-cluster";
-  const size = count >= 10 ? 40 : 34;
-  el.style.cssText = `width:${size}px;height:${size}px;cursor:pointer;z-index:5;`;
-  el.title = `${count} organisations here — click to zoom in`;
-  el.innerHTML = `
-    <span aria-hidden style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:9999px;background:#0f172a;color:#ffffff;font-size:13px;font-weight:600;box-shadow:0 0 0 3px rgba(255,255,255,.92),0 2px 8px rgba(15,23,42,.3);">
-      <span class="cluster-count">${count}</span>
-    </span>
-  `;
-  return el;
-}
-
-function updateInsightMarker(el: HTMLElement, insight: CommunityInsight, selectedInsightId: string | null, popupTarget: PopupTarget) {
-  const dot = el.querySelector("span") as HTMLElement | null;
-  if (!dot) return;
-  const isSelected = selectedInsightId === insight.id || (popupTarget?.kind === "insight" && popupTarget.id === insight.id);
-  dot.style.boxShadow = isSelected
-    ? `0 0 0 3px #ffffff, 0 0 0 5px #f59e0b, 0 2px 6px rgba(0,0,0,.3)`
-    : `0 0 0 2px #ffffff, 0 1px 2px rgba(0,0,0,.3)`;
-  dot.style.transform = isSelected ? "rotate(45deg) scale(1.25)" : "rotate(45deg)";
-  dot.style.transition = "transform .15s ease, box-shadow .15s ease";
-}
-
-function escapeHtml(s: string) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function truncate(s: string, max: number) {
-  if (s.length <= max) return s;
-  const slice = s.slice(0, max);
-  const cut = slice.lastIndexOf(" ");
-  return (cut > max * 0.6 ? slice.slice(0, cut) : slice).trimEnd() + "…";
-}
-
-function MapLegend({ wimdDomain }: { wimdDomain: WimdDomain }) {
-  const ramp: Array<{ q: 1 | 2 | 3 | 4 | 5; label: string }> = [
-    { q: 1, label: "Most deprived 20%" },
-    { q: 2, label: "Quintile 2" },
-    { q: 3, label: "Quintile 3" },
-    { q: 4, label: "Quintile 4" },
-    { q: 5, label: "Least deprived 20%" },
-  ];
-  const sectors: Array<[keyof typeof SECTOR_COLOURS, string]> = [
-    ["VCSE", "VCSE"],
-    ["Education", "Education"],
-    ["Public", "Public"],
-    ["Private", "Private / employer"],
-  ];
-  
-  const targetKey = wimdDomain === ("deprivation" as unknown as WimdDomain) ? "overall" : wimdDomain;
-  const domainLabel = WIMD_DOMAIN_LABELS[targetKey] || "Deprivation";
-
-  return (
-    <div className="absolute bottom-3 left-3 z-10 max-w-[230px] space-y-3 rounded-md bg-white/95 px-3 py-2 text-xs shadow ring-1 ring-slate-200 backdrop-blur">
-      <div>
-        <div className="mb-1 font-medium text-slate-700">
-          WIMD 2025 — <span className="text-slate-900">{domainLabel}</span>
-        </div>
-        <div className="space-y-1">
-          {ramp.map(({ q, label }) => (
-            <div key={q} className="flex items-center gap-2">
-              <span className="inline-block h-3 w-4 rounded-sm ring-1 ring-black/5" style={{ background: WIMD_RAMP[q] }} />
-              <span className="text-slate-600">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="border-t border-slate-200 pt-2">
-        <div className="mb-1 font-medium text-slate-700">Organisation sector</div>
-        <div className="space-y-1">
-          {sectors.map(([key, label]) => (
-            <div key={key} className="flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-full ring-1 ring-white" style={{ background: SECTOR_COLOURS[key] }} />
-              <span className="text-slate-600">{label}</span>
-            </div>
-          ))}
-          <div className="flex items-center gap-2 pt-1">
-            <span className="inline-block h-2.5 w-2.5 ring-1 ring-white" style={{ background: "#f59e0b", transform: "rotate(45deg)" }} />
-            <span className="text-slate-600">Community insight</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+      map.off("moveend",
