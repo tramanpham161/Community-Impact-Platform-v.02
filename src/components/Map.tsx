@@ -144,27 +144,28 @@ export function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    // Direct Raster configuration object prevents CORS file blocks on production servers
+    // Secure OpenStreetMap setup bypassing remote JSON dependency configurations entirely
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: {
         version: 8,
         sources: {
-          "carto-basemap": {
+          "osm-basemap": {
             type: "raster",
             tiles: [
-              "https://a.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
-              "https://b.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+              "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
             ],
             tileSize: 256,
-            attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+            attribution: "&copy; OpenStreetMap contributors",
           },
         },
         layers: [
           {
             id: "bg",
             type: "raster",
-            source: "carto-basemap",
+            source: "osm-basemap",
           },
         ],
       },
@@ -185,7 +186,7 @@ export function MapView({
         source: "cardiff-lsoa",
         paint: {
           "fill-color": paintForDomain(wimdDomainRef.current),
-          "fill-opacity": 0.55,
+          "fill-opacity": 0.45, // Dropped slightly to let OpenStreetMap text features peer through cleanly
         },
       });
       map.addLayer({
@@ -208,7 +209,9 @@ export function MapView({
         },
       });
     };
-    addWimdLayers();
+    
+    // Wire up events
+    map.on("load", addWimdLayers);
     map.on("styledata", addWimdLayers);
 
     // ── LSOA interaction ───────────────────────────────────────────────
@@ -587,7 +590,7 @@ export function MapView({
 
   return (
     <div className="relative h-[560px] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm">
-      <div ref={containerRef} className="absolute inset-0" />
+      <div ref={containerRef} className="absolute inset-0 bg-slate-50" />
       <MapLegend wimdDomain={wimdDomain} />
       {children}
     </div>
