@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
 import lsoaGeoJson from "@data/cardiff-lsoa.json";
 import type { CommunityInsight, Organisation, WimdDomain } from "@/lib/types";
 import { SECTOR_COLOURS, WIMD_DOMAIN_LABELS, WIMD_RAMP } from "@/lib/types";
