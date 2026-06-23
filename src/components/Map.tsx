@@ -142,9 +142,36 @@ export function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    // Self-contained light raster map style that avoids external styles, fonts, or glyph downloads.
+    const rasterStyle: any = {
+      version: 8,
+      sources: {
+        "carto-raster": {
+          type: "raster",
+          tiles: [
+            "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+            "https://a.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+            "https://b.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+            "https://c.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png"
+          ],
+          tileSize: 256,
+          attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>"
+        }
+      },
+      layers: [
+        {
+          id: "carto-raster-layer",
+          type: "raster",
+          source: "carto-raster",
+          minzoom: 0,
+          maxzoom: 20
+        }
+      ]
+    };
+
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+      style: rasterStyle,
       center: CARDIFF_CENTRE,
       zoom: 10.7,
       minZoom: 9.5,
@@ -192,6 +219,7 @@ export function MapView({
       });
     };
     addWimdLayers();
+    map.on("load", addWimdLayers);
     map.on("styledata", addWimdLayers);
 
     // ── LSOA interaction ───────────────────────────────────────────────
