@@ -2,10 +2,37 @@
 
 import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import lsoaGeoJson from "@data/cardiff-lsoa.json";
 import type { CommunityInsight, Organisation, WimdDomain } from "@/lib/types";
 import { SECTOR_COLOURS, WIMD_DOMAIN_LABELS, WIMD_RAMP } from "@/lib/types";
 import { wimdScoresFor } from "@/lib/wimd";
+
+const CARTO_POSITRON_STYLE: maplibregl.MapOptions["style"] = {
+  version: 8,
+  sources: {
+    "carto-positron": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+      ],
+      tileSize: 256,
+      attribution: "© OpenStreetMap contributors, © CARTO"
+    }
+  },
+  layers: [
+    {
+      id: "carto-positron",
+      type: "raster",
+      source: "carto-positron",
+      minzoom: 0,
+      maxzoom: 20
+    }
+  ]
+};
 
 const LSOA_DATA = lsoaGeoJson as unknown as GeoJSON.FeatureCollection;
 
@@ -143,7 +170,7 @@ export function MapView({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+      style: CARTO_POSITRON_STYLE,
       center: CARDIFF_CENTRE,
       zoom: 10.7,
       minZoom: 9.5,
