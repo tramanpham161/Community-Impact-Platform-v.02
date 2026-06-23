@@ -132,4 +132,15 @@ export function MapView({
       const link = document.createElement("link");
       link.id = "maplibre-injected-css";
       link.rel = "stylesheet";
-      link.href = "https://unpkg.com/maplibre-gl@4.7.
+      link.href = "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";
+      document.head.appendChild(link);
+    }
+
+    const map = new maplibregl.Map({
+      container: containerRef.current,
+      style: {
+        version: 8,
+        sources: {
+          "osm-basemap": {
+            type: "raster",
+            tiles:
