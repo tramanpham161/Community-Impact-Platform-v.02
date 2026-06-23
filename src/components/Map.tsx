@@ -559,15 +559,18 @@ export function MapView({
     if (!map) return;
     const apply = () => {
       if (!map.getLayer("wimd-selected-outline")) return;
-      map.setFilter("wimd-selected-outline", [
+      const targetFilter = [
         "==",
         ["get", "LSOA21CD"],
         selectedLSOACode ?? "__none__",
-      ]);
+      ];
+      const currentFilter = map.getFilter("wimd-selected-outline");
+      if (JSON.stringify(currentFilter) === JSON.stringify(targetFilter)) return;
+      map.setFilter("wimd-selected-outline", targetFilter);
     };
     apply();
     // The layer may not exist on the first effect run (style still loading);
-    // re-apply on styledata until it does.
+    // re-apply on styledata until it does. Only triggers setFilter if value actually changed.
     map.on("styledata", apply);
     return () => { map.off("styledata", apply); };
   }, [selectedLSOACode]);
