@@ -143,4 +143,99 @@ export function MapView({
         sources: {
           "osm-basemap": {
             type: "raster",
-            tiles:
+            tiles: [
+              "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            tileSize: 256,
+            attribution: "&copy; OpenStreetMap contributors"
+          }
+        },
+        layers: [
+          {
+            id: "bg",
+            type: "raster",
+            source: "osm-basemap"
+          }
+        ]
+      },
+      center: CARDIFF_CENTRE,
+      zoom: 10.7,
+      minZoom: 9.5,
+      maxZoom: 16,
+      attributionControl: { compact: true }
+    });
+    
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+
+    const addWimdLayers = () => {
+      if (!map.getStyle() || map.getSource("cardiff-lsoa")) return;
+      map.addSource("cardiff-lsoa", { type: "geojson", data: ENRICHED_LSOA_DATA as any });
+      map.addLayer({
+        id: "wimd-fill",
+        type: "fill",
+        source: "cardiff-lsoa",
+        paint: {
+          "fill-color": paintForDomain(wimdDomain),
+          "fill-opacity": 0.45
+        }
+      });
+      map.addLayer({
+        id: "wimd-outline",
+        type: "line",
+        source: "cardiff-lsoa",
+        paint: { "line-color": "#ffffff", "line-width": 0.5, "line-opacity": 0.7 }
+      });
+      map.addLayer({
+        id: "wimd-selected-outline",
+        type: "line",
+        source: "cardiff-lsoa",
+        filter: ["==", ["get", "LSOA21CD"], "__none__"],
+        paint: {
+          "line-color": "#0f172a",
+          "line-width": 2.5,
+          "line-opacity": 0.9
+        }
+      });
+    };
+    
+    map.on("load", addWimdLayers);
+    map.on("styledata", addWimdLayers);
+
+    const onLsoaClick = (e: maplibregl.MapLayerMouseEvent) => {
+      const f = e.features?.[0];
+      if (!f) return;
+      const code = f.properties?.LSOA21CD as string | undefined;
+      if (!code) return;
+      const current = selectedLSOACodeRef.current;
+      onSelectLSOARef.current(current === code ? null : code);
+    };
+    const onLsoaEnter = () => { map.getCanvas().style.cursor = "pointer"; };
+    const onLsoaLeave = () => { map.getCanvas().style.cursor = ""; };
+    map.on("click", "wimd-fill", onLsoaClick);
+    map.on("mouseenter", "wimd-fill", onLsoaEnter);
+    map.on("mouseleave", "wimd-fill", onLsoaLeave);
+
+    mapRef.current = map;
+
+    let lastW = 0, lastH = 0;
+    const ro = new ResizeObserver((entries) => {
+      if (!entries[0] || !containerRef.current) return;
+      const { width, height } = entries[0].contentRect;
+      if (width === lastW && height === lastH) return;
+      lastW = width; lastH = height;
+      map.resize();
+    });
+    ro.observe(containerRef.current);
+
+    return () => {
+      ro.disconnect();
+      if (popupRef.current) { popupRef.current.remove(); popupRef.current = null; }
+      popupTargetRef.current = null;
+      for (const m of clusterMarkersRef.current.values()) m.remove();
+      clusterMarkersRef.current.clear();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
