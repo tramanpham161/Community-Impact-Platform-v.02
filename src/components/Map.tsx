@@ -1,11 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import lsoaGeoJson from "@data/cardiff-lsoa.json";
 import type { CommunityInsight, Organisation, WimdDomain } from "@/lib/types";
 import { SECTOR_COLOURS, WIMD_DOMAIN_LABELS, WIMD_RAMP } from "@/lib/types";
 import { wimdScoresFor } from "@/lib/wimd";
+
+const CARTO_POSITRON_STYLE: maplibregl.MapOptions["style"] = {
+  version: 8,
+  sources: {
+    "carto-positron": {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+      ],
+      tileSize: 256,
+      attribution: "© OpenStreetMap contributors, © CARTO"
+    }
+  },
+  layers: [
+    {
+      id: "carto-positron",
+      type: "raster",
+      source: "carto-positron",
+      minzoom: 0,
+      maxzoom: 20
+    }
+  ]
+};
 
 const LSOA_DATA = lsoaGeoJson as unknown as GeoJSON.FeatureCollection;
 
@@ -92,6 +119,7 @@ export function MapView({
   wimdDomain,
   children,
 }: Props) {
+  const [mapSupported, setMapSupported] = useState(true);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const orgMarkersRef = useRef<globalThis.Map<string, maplibregl.Marker>>(new globalThis.Map());
@@ -141,15 +169,39 @@ export function MapView({
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-      center: CARDIFF_CENTRE,
-      zoom: 10.7,
-      minZoom: 9.5,
-      maxZoom: 16,
-      attributionControl: { compact: true },
-    });
+    // Native WebGL support check
+    const hasWebGL = (() => {
+      try {
+        const canvas = document.createElement("canvas");
+        return !!(window.WebGLRenderingContext && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl")));
+      } catch (e) {
+        return false;
+      }
+    })();
+
+    if (!hasWebGL) {
+      console.warn("WebGL not supported, rendering fallback selector.");
+      setMapSupported(false);
+      return;
+    }
+
+    let map: maplibregl.Map;
+    try {
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: CARTO_POSITRON_STYLE,
+        center: CARDIFF_CENTRE,
+        zoom: 10.7,
+        minZoom: 9.5,
+        maxZoom: 16,
+        attributionControl: { compact: true },
+      });
+    } catch (e) {
+      console.error("WebGL failed to initialize:", e);
+      setMapSupported(false);
+      return;
+    }
+
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     // The `load` event requires every source to be fully loaded — under React
@@ -601,6 +653,50 @@ export function MapView({
       map.easeTo(opts);
     }
   }, [selectedOrgId, selectedInsightId, orgsById, insightsById, detailPanelWidth]);
+
+  if (!mapSupported) {
+    return (
+      <div className="relative h-[560px] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
+        <div className="max-w-md p-6 bg-white rounded-xl border border-slate-200 shadow-lg space-y-4">
+          <div className="mx-auto w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
+            <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 className="text-sm font-bold text-slate-900">Interactive Map Preview</h3>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            WebGL is disabled or unsupported in this browser sandbox.
+          </p>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            The deprivation choropleth and pins require WebGL. However, you can still search and interact with the organizations and themes using the lists and filters!
+          </p>
+          <div className="pt-2 text-left">
+            <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-1" htmlFor="lsoa-fallback-selector">
+              Select Cardiff LSOA filter manually:
+            </label>
+            <select
+              id="lsoa-fallback-selector"
+              value={selectedLSOACode ?? ""}
+              onChange={(e) => onSelectLSOA(e.target.value || null)}
+              className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
+            >
+              <option value="">-- No LSOA Filter --</option>
+              {ENRICHED_LSOA_DATA.features.map((f: any) => {
+                const code = f.properties?.LSOA21CD;
+                const name = f.properties?.displayName || f.properties?.LSOA21NM || code;
+                return (
+                  <option key={code} value={code}>
+                    {name} ({code})
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-[560px] w-full overflow-hidden rounded-lg border border-slate-200 shadow-sm">
